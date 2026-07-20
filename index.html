@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sistem Rekam Update NTPD</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { font-family: 'Segoe UI', sans-serif; }
+  .loader { border-top-color: #3b82f6; animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .view { display: none; }
+  .view.active { display: block; }
+  .nav-btn.active { background: white; color: #1e40af; }
+</style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+<!-- HEADER -->
+<header class="bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-lg">
+  <div class="container mx-auto px-4 py-4">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-bold">Sistem Rekam Permohonan Update NTPD 📋</h1>
+        <p class="text-emerald-100 text-sm">Proses Permohonan Update anda akan dilakukan di jam dan hari kerja</p>
+      </div>
+      <nav class="mt-3 md:mt-0 flex gap-2 bg-emerald-800/30 rounded-lg p-1">
+        <button onclick="showView('public')" id="navPublic" class="nav-btn px-4 py-2 rounded text-sm font-medium text-white hover:bg-white/20">📝 Form Input</button>
+        <button onclick="showView('login')" id="navLogin" class="nav-btn px-4 py-2 rounded text-sm font-medium text-white hover:bg-white/20">🔐 Login</button>
+        <button onclick="showView('dashboard')" id="navDashboard" class="nav-btn px-4 py-2 rounded text-sm font-medium text-white hover:bg-white/20 hidden">📊 Dashboard</button>
+        <button onclick="logout()" id="btnLogout" class="nav-btn px-4 py-2 rounded text-sm font-medium text-white hover:bg-red-500 hidden">🚪 Logout</button>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<!-- VIEW 1: FORM PUBLIK -->
+<section id="viewPublic" class="view active">
+  <div class="container mx-auto px-4 py-8 max-w-2xl">
+    <div class="bg-white rounded-xl shadow-lg p-6">
+      <div class="mb-5">
+        <h2 class="text-xl font-bold text-gray-800">📝 Form Pendaftaran Update NTPD</h2>
+        <p class="text-sm text-gray-500 mt-1">Isi data di bawah untuk meminta update NTPD. Status awal: <span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs font-semibold">Baru Daftar</span></p>
+      </div>
+      <form id="formInput" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium mb-1">No BPHTB (Tanpa Titik dan Strip)*</label>
+          <input id="noBphtb" required placeholder="Contoh:5105202607100009001" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-400 outline-none"/>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium mb-1">NTPD *</label>
+          <input id="ntpd" type="text" inputmode="numeric" required placeholder="Contoh: 337727191514966437 / 10583880"
+            oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+            class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-400 outline-none"/>
+          <p class="text-xs text-gray-400 mt-1">Isi angka saja tanpa titik, koma, atau simbol</p>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium mb-1">PPAT *</label>
+          <select id="ppat" required class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-400 outline-none">
+            <option value="">-- Pilih PPAT --</option>
+              <option>PEMOHON</option>
+           <option>A.A. GDE AGUNG BRAHMANTA, S.H., M.KN</option>
+    <option>ANAK AGUNG ANGGA PRIMANTARI, S.H., M.KN</option>
+    <option>ANAK AGUNG DICKY ARIANTO, S.H., M.KN</option>
+    <option>ANAK AGUNG FAJAR MARTINI DEWI, S.H., M.KN</option>
+    <option>ANAK AGUNG GEDE PRATAMA DEWANGGA, S.H., M.KN</option>
+    <option>ANAK AGUNG NANDHI LARASATI, S.H., M.KN</option>
+    <option>ARYA BAGUS KHRISNA BUDI SANTOSA PUTRA, S.H., M.KN</option>
+    <option>COKORDA GEDE RAMAPUTRA, S.H., M.KN</option>
+    <option>DEBORA DAMPU, S.H., M.KN</option>
+    <option>GEDE ODE ANGGA PRATAMA, S.H., M.KN</option>
+    <option>GUSTI AYU NADINA UTAMA PRAMADANI, S.H., M.KN</option>
+    <option>I DEWA MADE ADHI HUTAMA, S.H., M.KN</option>
+    <option>I GEDE ANGGA PERMANA, S.H., M.KN</option>
+    <option>I GEDE ARYA KUSUMA, S.H., M.KN</option>
+    <option>I GEDE EDI SUANDA, S.H., M.KN</option>
+    <option>I GEDE PRAPTAJAYA, S.H., M.KN</option>
+    <option>I GST NGURAH AGUNG ANDIKA DARMAWAN, S.H., M.KN</option>
+    <option>I GUSTI AGUNG AYU DEWI SATYAWATI, S.H., M.KN</option>
+    <option>I GUSTI AGUNG AYU PATRECIA MARTHAVIRA, S.H., M.KN</option>
+    <option>I GUSTI AYU INTAN WULANDARI, S.H., M.KN</option>
+    <option>I GUSTI AYU MADE ARYASTINI, S.P., S.H., M.KN</option>
+    <option>I GUSTI AYU RYAN SONNIA PARAMITA, S.H., M.KN</option>
+    <option>I GUSTI AYU SRI IRYANI, S.H., M.KN</option>
+    <option>I GUSTI NYOMAN RUPINI, S.H.</option>
+    <option>I GUSTI NGURAH GEDE SUSILA, S.H., M.KN</option>
+    <option>I KADEK SUARDANA, S.H., M.KN</option>
+    <option>I KETUT NGURAH ANANDA, S.H., M.KN</option>
+    <option>I KETUT NOVA ANTA PUTRA, S.H., M.KN</option>
+    <option>I KOMANG SUJANAYASA, S.H., M.KN</option>
+    <option>I MADE GEDE SUWETA, S.H., M.KN</option>
+    <option>I MADE WIYARDANA, S.H., S.E., M.KN</option>
+    <option>I PUTU ADI KUSNA PASEK, S.H., M.KN</option>
+    <option>I PUTU PUSPAJANA, S.H.</option>
+    <option>I WAYAN ADI PURNAMA SRIADA, S.H., M.KN</option>
+    <option>I WAYAN ARYA KURNIAWAN, S.H., M.KN</option>
+    <option>I WAYAN SUJANA, S.H., M.KN</option>
+    <option>IDA AYU KALPIKAWATI, S.H., SPN</option>
+    <option>IDA AYU MADE WIDYARI, S.H., M.KN</option>
+    <option>IDA AYU NYOMAN PUSPADEWI, S.H., M.KN</option>
+    <option>IDA AYU OKI AMRITA WIJAYA, S.H., M.KN</option>
+    <option>IDA AYU SHINTYANI BRAHMISIWI, S.H., M.KN</option>
+    <option>IDA AYU WULAN RISMAYANTHI, S.H., M.KN</option>
+    <option>IDA BAGUS DALEM TRY UTAMA MANUABA, S.H., M.KN</option>
+    <option>IDA BAGUS GEDE PARTHA SUWIRYA, S.H., M.KN</option>
+    <option>IDA BAGUS KETUT SUARDANA, S.H., M.KN</option>
+    <option>IDA BAGUS PARAMANINGRAT MANUABA, S.H., M.KN</option>
+    <option>IKA AYUNINGTYAS, S.H., M.KN</option>
+    <option>IMAM MASHURI, S.H., M.KN</option>
+    <option>KADEK DWI TUSIDHI CESARYANTI, S.H., M.KN</option>
+    <option>KADEK KHARISMA MATARINI, S.H., M.KN</option>
+    <option>KADEK WAHYU PAJAR SUTOYA, S.H., M.KN</option>
+    <option>KOMANG PRATIWI JUWITA, S.H., M.KN</option>
+    <option>KOMANG RIO ANJANA, S.H., M.KN</option>
+    <option>KOMANG WINDA LISKA ATMAJA, S.H., M.KN</option>
+    <option>LUH AYU SARASWATI, S.H., M.KN</option>
+    <option>LUH NYOMAN DEBY KRISTINA DEWI, S.H., M.KN</option>
+    <option>LUH WIKE SAPTIA DEWI, S.H., M.KN</option>
+    <option>M TAUFIQUR RACHMAN, S.H., M.KN</option>
+    <option>MADE ARI PARYADNYA, S.H., M.KN</option>
+    <option>MADE ARIWIBAWA, S.H., M.KN</option>
+    <option>MADE PUTRI SARASWATI, S.H., M.KN</option>
+    <option>MADE RAKA KUSUMA ANGGARDA P, S.H., S.T., M.KN</option>
+    <option>MADE WIDYADI, S.H., M.KN</option>
+    <option>MARIA SERAPHINE KARTIKA DEWI, S.H., M.KN</option>
+    <option>NGAKAN PUTU RAI, S.H., M.KN</option>
+    <option>NI KADEK NILA KUSUMA SARI, S.H., M.KN</option>
+    <option>NI KETUT AYU MAS DIRMAYUNTI, S.H.</option>
+    <option>NI LUH GEDE ISA PRARESTI DANGIN, S.H., M.KN</option>
+    <option>NI LUH GEK SITA PRAMITASARI, S.H., M.KN</option>
+    <option>NI LUH PUTU SWANDEWI, S.H., M.KN</option>
+    <option>NI MADE NOVIA ANDRYANI, S.H., M.KN</option>
+    <option>NI NYOMAN ISMAYANI, S.H., M.KN</option>
+    <option>NI NYOMAN JULIANTARI, S.H., M.KN</option>
+    <option>NI PUTU SELVYANA PUTRI PRATAMIKHA, S.H., M.KN</option>
+    <option>NI WAYAN ADIANI, SH, M.KN</option>
+    <option>NYOMAN AYU KARINA SUSANTI, S.H., M.KN</option>
+    <option>NYOMAN OKY ASOKAWATI FRISKANANDA, S.H., M.KN</option>
+    <option>PANDE NYOMAN ANGGRAENI, S.H., M.KN</option>
+    <option>PATRICIA SEMBUNG, S.H., M.KN</option>
+    <option>PUTU DARMA ADITYA WESTA, S.H., M.KN</option>
+    <option>SHERLY FEBRYANNE PRAYOGO, S.H., M.KN</option>
+    <option>SITI NUR AZIZAH, S.H., M.KN</option>
+    <option>UMMI ROCHIMAH, S.H., M.KN</option>
+    <option>WAHYU SATRIA WANA PUTRA WIJAYA, S.H., M.KN</option>
+    <option>WIWIN PONCO HARYATI, S.H.</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Nama Pelapor *</label>
+          <input id="namaPelapor" required class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-400 outline-none"/>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">No HP / WhatsApp *</label>
+          <input id="kontak" required placeholder="08xxxxxxxxxx" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-400 outline-none"/>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium mb-1">Catatan (opsional)</label>
+          <textarea id="catatan" rows="2" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-400 outline-none"></textarea>
+        </div>
+        <div class="md:col-span-2 flex justify-end gap-2 pt-2">
+          <button type="reset" class="px-4 py-2 border rounded-lg hover:bg-gray-100">Reset</button>
+          <button type="submit" class="px-6 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 font-semibold">📤 Kirim Data</button>
+        </div>
+      </form>
+      <div id="successMsg" class="hidden mt-4 bg-green-50 border-l-4 border-green-500 p-4 rounded">
+        <p class="text-green-800 font-semibold">✅ Data berhasil direkam!</p>
+        <p class="text-green-700 text-sm">ID Pendaftaran: <span id="newId" class="font-mono font-bold"></span></p>
+        <p class="text-green-700 text-sm">Status: <span class="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded">Baru Daftar</span> — menunggu verifikasi admin.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIEW 2: LOGIN ADMIN -->
+<section id="viewLogin" class="view">
+  <div class="container mx-auto px-4 py-12 max-w-md">
+    <div class="bg-white rounded-xl shadow-lg p-6">
+      <h2 class="text-xl font-bold text-gray-800 mb-1">🔐 Login</h2>
+      <p class="text-sm text-gray-500 mb-5">Masuk untuk melihat status update NTPD anda</p>
+      <form id="formLogin" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium mb-1">Username</label>
+          <input id="username" required class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-400 outline-none"/>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Password</label>
+          <input id="password" type="password" required class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-400 outline-none"/>
+        </div>
+        <div id="loginError" class="hidden text-red-600 text-sm bg-red-50 p-2 rounded"></div>
+        <button type="submit" class="w-full py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 font-semibold">Masuk</button>
+      </form>
+      <div class="mt-4 p-3 bg-blue-50 rounded text-xs text-blue-700">
+        <p class="font-semibold">💡Gunakan Password berikut untuk melihat status update NTPD anda:</p>
+        <p>Username: <code class="bg-white px-1">operator</code> | Password: <code class="bg-white px-1">operator123</code></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIEW 3: DASHBOARD ADMIN -->
+<section id="viewDashboard" class="view">
+  <div class="container mx-auto px-4 py-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+      <div class="bg-white rounded-xl shadow p-4 border-l-4 border-blue-500">
+        <p class="text-xs text-gray-500 uppercase">Total Data</p>
+        <p id="statTotal" class="text-2xl font-bold text-gray-800">0</p>
+      </div>
+      <div class="bg-white rounded-xl shadow p-4 border-l-4 border-yellow-500">
+        <p class="text-xs text-gray-500 uppercase">Baru Daftar</p>
+        <p id="statBaru" class="text-2xl font-bold text-yellow-600">0</p>
+      </div>
+      <div class="bg-white rounded-xl shadow p-4 border-l-4 border-green-500">
+        <p class="text-xs text-gray-500 uppercase">Sudah diupdate</p>
+        <p id="statUpdate" class="text-2xl font-bold text-green-600">0</p>
+      </div>
+      <div class="bg-white rounded-xl shadow p-4 border-l-4 border-purple-500">
+        <p class="text-xs text-gray-500 uppercase">PPAT Aktif</p>
+        <p id="statPPAT" class="text-2xl font-bold text-purple-600">0</p>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow p-4 grid grid-cols-1 md:grid-cols-4 gap-3 mb-4">
+      <input id="searchInput" type="text" placeholder="🔍 Cari No BPHTB / Nama..." class="border rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-400 outline-none"/>
+      <select id="filterStatus" class="border rounded-lg px-3 py-2 outline-none">
+        <option value="">-- Semua Status --</option>
+        <option>Baru Daftar</option>
+        <option>Sudah diupdate</option>
+      </select>
+      <select id="filterPPAT" class="border rounded-lg px-3 py-2 outline-none">
+        <option value="">-- Semua PPAT --</option>
+      </select>
+      <button onclick="loadDashboard()" class="bg-emerald-600 text-white rounded-lg px-4 py-2 hover:bg-emerald-700">🔄 Refresh</button>
+    </div>
+
+    <div class="bg-white rounded-xl shadow overflow-x-auto">
+      <table class="w-full text-sm text-left">
+        <thead class="bg-emerald-700 text-white text-xs uppercase">
+          <tr>
+            <th class="px-3 py-3">No BPHTB</th>
+            <th class="px-3 py-3">NTPD</th>
+            <th class="px-3 py-3">PPAT</th>
+            <th class="px-3 py-3">Pelapor</th>
+            <th class="px-3 py-3">Status</th>
+            <th class="px-3 py-3">Tgl Input</th>
+            <th class="px-3 py-3 text-center">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody" class="divide-y">
+          <tr><td colspan="7" class="text-center py-10 text-gray-500">Memuat data...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+  <!-- Footer Bottom: Copyright -->
+  <div class="border-t border-gray-700 bg-gray-900/50">
+    <div class="container mx-auto px-4 py-4">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-2 text-xs text-emerald-400">
+        <p>
+          <p class="text-emerald-100 text-sm"> © <span id="yearFooter"></span> <span class="text-emerald-400 font-semibold">Sistem Rekam Pelayanan Update NTPD</span>. 
+          <p class="text-emerald-100 text-sm"> Proses Permohonan Update anda akan dilakukan di jam dan hari kerja.
+        </p>
+        <p>
+          <p class="text-emerald-100 text-sm"> Developed with ❤️ by <span class="text-emerald-400">Putu Satya</span> | 
+          <a href="#" onclick="alert('Kebijakan Privasi\n\nData Anda disimpan aman di Google Sheets.\nAkses hanya untuk admin terautentikasi.');return false;" class="hover:text-emerald-400">Privacy Policy</a> · 
+          <a href="#" onclick="alert('Syarat & Ketentuan\n\n1. Data yang diinput harus benar\n2. Dilarang menyalahgunakan sistem\n3. Admin berhak memverifikasi data');return false;" class="hover:text-emerald-400">Terms of Service</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+<!-- MODAL DETAIL -->
+<div id="modalDetail" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+    <div class="p-5 border-b flex justify-between items-center">
+      <h2 class="text-xl font-bold text-emerald-700">Detail & Ubah Status</h2>
+      <button onclick="closeModal()" class="text-gray-500 hover:text-red-500 text-2xl">&times;</button>
+    </div>
+    <div id="detailContent" class="p-5"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="hidden fixed bottom-5 right-5 px-5 py-3 rounded-lg shadow-lg z-50 text-white"></div>
+
+<script>
+/* ============================================================
+   KONFIGURASI — GANTI URL DI BAWAH DENGAN URL WEB APP ANDA
+   ============================================================ */
+const API_URL = "https://script.google.com/macros/s/AKfycby2igHWN8sFT2GNgKF8_SZZWxhvOOCXI1gwTTJofohayJLgaSERedmZrF-pXfYe_v-fzA/exec";
+const TOKEN_KEY = "ntpd_admin_token";
+/* ============================================================ */
+
+let allData = [];
+let isAdmin = !!localStorage.getItem(TOKEN_KEY);
+
+document.addEventListener('DOMContentLoaded', () => {
+  updateAuthUI();
+  document.getElementById('formInput').addEventListener('submit', submitPublic);
+  document.getElementById('formLogin').addEventListener('submit', submitLogin);
+  document.getElementById('searchInput').addEventListener('input', renderTable);
+  document.getElementById('filterStatus').addEventListener('change', renderTable);
+  document.getElementById('filterPPAT').addEventListener('change', renderTable);
+});
+
+function showView(name) {
+  if (name === 'dashboard' && !isAdmin) {
+    showToast('⚠️ Silakan login sebagai admin terlebih dahulu', true);
+    name = 'login';
+  }
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const viewId = 'view' + name.charAt(0).toUpperCase() + name.slice(1);
+  const el = document.getElementById(viewId);
+  if (el) el.classList.add('active');
+  const navBtn = document.getElementById('nav' + name.charAt(0).toUpperCase() + name.slice(1));
+  if (navBtn) navBtn.classList.add('active');
+  if (name === 'dashboard') loadDashboard();
+}
+
+function updateAuthUI() {
+  document.getElementById('navDashboard').classList.toggle('hidden', !isAdmin);
+  document.getElementById('btnLogout').classList.toggle('hidden', !isAdmin);
+  document.getElementById('navLogin').classList.toggle('hidden', isAdmin);
+  if (isAdmin) showView('dashboard'); else showView('public');
+}
+
+/* ====== PUBLIC FORM ====== */
+async function submitPublic(e) {
+  e.preventDefault();
+  const payload = {
+    noBphtb: document.getElementById('noBphtb').value.trim(),
+    ntpd: document.getElementById('ntpd').value.trim(),
+    ppat: document.getElementById('ppat').value,
+    namaPelapor: document.getElementById('namaPelapor').value.trim(),
+    kontak: document.getElementById('kontak').value.trim(),
+    catatan: document.getElementById('catatan').value.trim()
+  };
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'create', data: payload })
+    });
+    const json = await res.json();
+    if (!json.success) throw new Error(json.message);
+    document.getElementById('newId').textContent = json.id;
+    document.getElementById('successMsg').classList.remove('hidden');
+    document.getElementById('formInput').reset();
+    showToast('✅ Data berhasil direkam');
+    setTimeout(() => document.getElementById('successMsg').classList.add('hidden'), 8000);
+  } catch (err) { showToast('❌ ' + err.message, true); }
+}
+
+/* ====== LOGIN ====== */
+async function submitLogin(e) {
+  e.preventDefault();
+  const errBox = document.getElementById('loginError');
+  errBox.classList.add('hidden');
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'login',
+        data: {
+          username: document.getElementById('username').value,
+          password: document.getElementById('password').value
+        }
+      })
+    });
+    const json = await res.json();
+    if (!json.success) throw new Error(json.message);
+    localStorage.setItem(TOKEN_KEY, json.token);
+    isAdmin = true;
+    updateAuthUI();
+    showToast('✅ Login berhasil');
+  } catch (err) {
+    errBox.textContent = '❌ ' + err.message;
+    errBox.classList.remove('hidden');
+  }
+}
+
+function logout() {
+  if (!confirm('Yakin ingin logout?')) return;
+  localStorage.removeItem(TOKEN_KEY);
+  isAdmin = false;
+  updateAuthUI();
+  showToast('👋 Anda telah logout');
+}
+
+/* ====== DASHBOARD ====== */
+async function loadDashboard() {
+  const token = localStorage.getItem(TOKEN_KEY);
+  if (!token) return;
+  try {
+    document.getElementById('tableBody').innerHTML =
+      '<tr><td colspan="7" class="text-center py-10"><div class="loader w-8 h-8 border-4 border-gray-200 rounded-full mx-auto"></div></td></tr>';
+    const res = await fetch(API_URL + "?action=read&token=" + encodeURIComponent(token));
+    const json = await res.json();
+    if (!json.success) {
+      if (json.message === 'Token invalid') { logout(); return; }
+      throw new Error(json.message);
+    }
+    allData = json.data;
+    updateStats();
+    populatePPATFilter();
+    renderTable();
+  } catch (e) {
+    document.getElementById('tableBody').innerHTML =
+      `<tr><td colspan="7" class="text-center py-10 text-red-500">❌ ${e.message}</td></tr>`;
+  }
+}
+
+function updateStats() {
+  document.getElementById('statTotal').textContent = allData.length;
+  document.getElementById('statBaru').textContent = allData.filter(d => d.status === 'Baru Daftar').length;
+  document.getElementById('statUpdate').textContent = allData.filter(d => d.status === 'Sudah diupdate').length;
+  const ppatSet = new Set(allData.map(d => d.ppat).filter(Boolean));
+  document.getElementById('statPPAT').textContent = ppatSet.size;
+}
+
+function populatePPATFilter() {
+  const sel = document.getElementById('filterPPAT');
+  const cur = sel.value;
+  const ppatSet = new Set(allData.map(d => d.ppat));
+  sel.innerHTML = '<option value="">-- Semua PPAT --</option>' +
+    [...ppatSet].map(p => `<option ${p===cur?'selected':''}>${p}</option>`).join('');
+}
+
+function renderTable() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const fS = document.getElementById('filterStatus').value;
+  const fP = document.getElementById('filterPPAT').value;
+  const filtered = allData.filter(d =>
+    (!q || (d.noBphtb + d.namaPelapor).toLowerCase().includes(q)) &&
+    (!fS || d.status === fS) &&
+    (!fP || d.ppat === fP)
+  );
+  const tbody = document.getElementById('tableBody');
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" class="text-center py-10 text-gray-500">Tidak ada data</td></tr>';
+    return;
+  }
+  tbody.innerHTML = filtered.map(d => {
+    const statusClass = d.status === 'Sudah diupdate'
+      ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700';
+    const ntpdFmt = Number(d.ntpd) || 0;
+    return `
+    <tr>
+      <td class="px-3 py-2 font-mono text-xs">${d.noBphtb}</td>
+      <td class="px-3 py-2 font-semibold">${ntpdFmt}</td>
+      <td class="px-3 py-2"><span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">${d.ppat}</span></td>
+      <td class="px-3 py-2">${d.namaPelapor}<br><span class="text-xs text-gray-500">${d.kontak}</span></td>
+      <td class="px-3 py-2"><span class="${statusClass} px-2 py-1 rounded text-xs font-semibold">${d.status}</span></td>
+      <td class="px-3 py-2 text-xs text-gray-500">${d.timestamp || '-'}</td>
+      <td class="px-3 py-2 text-center">
+        <button onclick='openDetail(${JSON.stringify(d)})' class="text-emerald-600 hover:underline font-semibold">⚙️ Kelola</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function openDetail(d) {
+  const ntpdFmt = Number(d.ntpd) || 0;
+  document.getElementById('detailContent').innerHTML = `
+    <div class="space-y-3 text-sm">
+      <div class="grid grid-cols-2 gap-3">
+        <div><p class="text-gray-500 text-xs">ID</p><p class="font-mono">${d.id}</p></div>
+        <div><p class="text-gray-500 text-xs">Status</p><p class="font-semibold">${d.status}</p></div>
+        <div><p class="text-gray-500 text-xs">No BPHTB</p><p class="font-mono font-semibold">${d.noBphtb}</p></div>
+        <div><p class="text-gray-500 text-xs">NTPD</p><p class="font-semibold">${ntpdFmt}</p></div>
+        <div class="col-span-2"><p class="text-gray-500 text-xs">PPAT</p><p>${d.ppat}</p></div>
+        <div><p class="text-gray-500 text-xs">Pelapor</p><p>${d.namaPelapor}</p></div>
+        <div><p class="text-gray-500 text-xs">Kontak</p><p>${d.kontak}</p></div>
+        <div class="col-span-2"><p class="text-gray-500 text-xs">Catatan</p><p>${d.catatan || '-'}</p></div>
+        <div><p class="text-gray-500 text-xs">Tgl Input</p><p>${d.timestamp || '-'}</p></div>
+        <div><p class="text-gray-500 text-xs">Tgl Update</p><p>${d.updatedAt || '-'}</p></div>
+      </div>
+      <hr class="my-3"/>
+      <div>
+        <label class="block text-sm font-medium mb-2">Ubah Status:</label>
+        <div class="flex gap-2">
+          <button onclick="changeStatus('${d.id}','Baru Daftar')" class="flex-1 py-2 rounded-lg border-2 ${d.status==='Baru Daftar'?'border-yellow-500 bg-yellow-50':'border-gray-200'} hover:bg-yellow-100 font-semibold text-sm">🟡 Baru Daftar</button>
+          <button onclick="changeStatus('${d.id}','Sudah diupdate')" class="flex-1 py-2 rounded-lg border-2 ${d.status==='Sudah diupdate'?'border-green-500 bg-green-50':'border-gray-200'} hover:bg-green-100 font-semibold text-sm">🟢 Sudah diupdate</button>
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Catatan Admin (opsional)</label>
+        <input id="adminNote" value="${d.adminNote||''}" class="w-full border rounded-lg px-3 py-2 text-sm"/>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeModal()" class="px-4 py-2 border rounded-lg hover:bg-gray-100 text-sm">Tutup</button>
+        <button onclick="saveAdminNote('${d.id}')" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 text-sm">💾 Simpan Catatan</button>
+      </div>
+    </div>`;
+  document.getElementById('modalDetail').classList.remove('hidden');
+}
+function closeModal() { document.getElementById('modalDetail').classList.add('hidden'); }
+
+async function changeStatus(id, status) {
+  if (!confirm(`Ubah status menjadi "${status}"?`)) return;
+  await apiAction('updateStatus', { id, status });
+}
+async function saveAdminNote(id) {
+  const note = document.getElementById('adminNote').value;
+  await apiAction('updateNote', { id, adminNote: note });
+}
+
+async function apiAction(action, data) {
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action, data, token: localStorage.getItem(TOKEN_KEY) })
+    });
+    const json = await res.json();
+    if (!json.success) throw new Error(json.message);
+    showToast(json.message);
+    closeModal();
+    loadDashboard();
+  } catch (e) { showToast('❌ ' + e.message, true); }
+}
+
+function showToast(msg, err=false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `fixed bottom-5 right-5 px-5 py-3 rounded-lg shadow-lg z-50 text-white ${err?'bg-red-600':'bg-emerald-600'}`;
+  t.classList.remove('hidden');
+  setTimeout(() => t.classList.add('hidden'), 3000);
+}
+</script>
+</body>
+</html>
